@@ -1,9 +1,9 @@
 /*
   RoundCoordinatesToValue.jsx for Adobe Illustrator
   
-  Rounds the coordinates of anchors and/or handles to a specified level of precision.
+  Description: Rounds the coordinates of anchors and/or handles to a specified level of precision.
 
-  @organizedslop
+  Author: organizedslop
   
   Release notes:
   0.1 Initial version
