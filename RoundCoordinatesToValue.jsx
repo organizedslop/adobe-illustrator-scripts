@@ -1,6 +1,11 @@
 /*
-Rounds the coordinates of anchors and/or handles to a specified precision
-https://github.com/blakeexists/adobe-illustrator-scripts
+  RoundCoordinatesToValue.jsx for Adobe Illustrator
+  Description: Rounds the coordinates of anchors and/or handles to a specified precision
+  
+  Release notes:
+  0.1 Initial version
+  
+  https://github.com/blakeexists/adobe-illustrator-scripts
 */
 
 // Creates dialog window
@@ -81,6 +86,9 @@ dialog.show();
 // =============================================================================
 
 function main() {
+  if (!documents.length)
+    return;
+  
   var doc = app.activeDocument,
       roundTo = edittextroundTo.text,
       selPaths = [],
