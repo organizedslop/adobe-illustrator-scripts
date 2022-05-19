@@ -1,10 +1,10 @@
 /*
   RoundCoordinatesToValue.jsx for Adobe Illustrator
-  
+
   Description: Rounds the coordinates of anchors and/or handles to a specified level of precision.
 
   Author: organizedslop
-  
+
   Release notes:
   0.1 Initial version
 */
@@ -19,43 +19,43 @@ var dialog = new Window("dialog");
   dialog.margins = 16;
 
 // Creates selection panel
-var panel1 = dialog.add("panel", undefined, undefined, {name: "panel1"});
-  panel1.text = "Apply to";
-  panel1.preferredSize.width = 110;
-  panel1.orientation = "column";
-  panel1.alignChildren = ["left", "center"];
-  panel1.spacing = 10;
-  panel1.margins = 10;
+var panelS = dialog.add("panel", undefined, undefined, {name: "panelS"});
+  panelS.text = "Apply to";
+  panelS.preferredSize.width = 110;
+  panelS.orientation = "column";
+  panelS.alignChildren = ["left", "center"];
+  panelS.spacing = 10;
+  panelS.margins = 10;
 
-var radiobuttonAll = panel1.add("radiobutton", undefined, undefined, {name: "radiobuttonAll"});
+var radiobuttonAll = panelS.add("radiobutton", undefined, undefined, {name: "radiobuttonAll"});
   radiobuttonAll.text = "All";
   radiobuttonAll.value = true;
 
-var radiobuttonSel = panel1.add("radiobutton", undefined, undefined, {name: "radiobuttonSel"});
+var radiobuttonSel = panelS.add("radiobutton", undefined, undefined, {name: "radiobuttonSel"});
   radiobuttonSel.text = "Selected";
 
-var divider = panel1.add("panel", undefined, undefined, {name: "divider"});
+var divider = panelS.add("panel", undefined, undefined, {name: "divider"});
   divider.alignment = "fill";
 
-var checkboxAnchors = panel1.add("checkbox", undefined, undefined, {name: "checkboxAnchors"});
+var checkboxAnchors = panelS.add("checkbox", undefined, undefined, {name: "checkboxAnchors"});
   checkboxAnchors.text = "Anchors";
   checkboxAnchors.value = true;
 
-var checkboxHandles = panel1.add("checkbox", undefined, undefined, {name: "checkboxHandles"});
+var checkboxHandles = panelS.add("checkbox", undefined, undefined, {name: "checkboxHandles"});
   checkboxHandles.text = "Handles";
 
 // Creates precision panel
-var panel2 = dialog.add("panel", undefined, undefined, {name: "panel2"});
-  panel2.text = "Round to (" + getUnits() + ")";
-  panel2.preferredSize.width = 110;
-  panel2.orientation = "column";
-  panel2.alignChildren = ["center", "center"];
-  panel2.spacing = 10;
-  panel2.margins = 10;
+var panelP = dialog.add("panel", undefined, undefined, {name: "panelP"});
+  panelP.text = "Precision (" + getUnits() + ")";
+  panelP.preferredSize.width = 110;
+  panelP.orientation = "column";
+  panelP.alignChildren = ["center", "center"];
+  panelP.spacing = 10;
+  panelP.margins = 10;
 
-var edittextroundTo = panel2.add('edittext {justify: "center", properties: {name: "edittextroundTo"}}');
-  edittextroundTo.text = "1";
-  edittextroundTo.preferredSize.width = 50;
+var precisionInput = panelP.add('edittext {justify: "center", properties: {name: "precisionInput"}}');
+  precisionInput.text = "1";
+  precisionInput.preferredSize.width = 50;
 
 // Creates OK and Cancel buttons
 var groupConfirm = dialog.add("group"),
@@ -69,17 +69,11 @@ buttonOk.onClick = function(){
 
 // Returns abbreviated document units
 function getUnits(){
-  var units = app.activeDocument.rulerUnits.toString().substring(11);
-  if (units == "Pixels") return "px";
-  else if (units == "Points") return "pt";
-  else if (units == "Picas") return "pc";
-  else if (units == "Inches") return "in";
-  else if (units == "Feet") return "ft";
-  else if (units == "Yards") return "yd";
-  else if (units == "Millimeters") return "mm";
-  else if (units == "Centimeters") return "cm";
-  else if (units == "Meters") return "m";
-  else return units;
+  var units = app.activeDocument.XMPString.match(/<stDim:unit>.*<\/stDim:unit>/).toString().slice(12, -13);
+  var unitAbbreviations = {"Pixels":"px", "Points":"pt", "Picas":"pc", "Inches":"in",
+                           "Feet":"ft", "Yards":"yd", "Millimeters":"mm", "Centimeters":"cm",
+                           "Meters":"m"};
+  return unitAbbreviations[units];
 }
 
 dialog.show();
@@ -89,9 +83,9 @@ dialog.show();
 function main() {
   if (!documents.length)
     return;
-  
+
   var doc = app.activeDocument,
-      roundTo = edittextroundTo.text,
+      roundTo = precisionInput.text,
       selPaths = [],
       selPoints = [];
 
